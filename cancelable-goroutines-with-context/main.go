@@ -31,14 +31,12 @@ func cancelable(ctx context.Context, f func() error) error {
 		ch <- f()
 	}()
 
-	for {
-		select {
-		case <-ctx.Done():
-			return errors.New("function too slow")
+	select {
+	case <-ctx.Done():
+		return errors.New("function too slow")
 
-		case err := <-ch:
-			return err
-		}
+	case err := <-ch:
+		return err
 	}
 }
 
