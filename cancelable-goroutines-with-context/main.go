@@ -7,14 +7,19 @@ import (
 	"time"
 )
 
-func verySlowRemoteCall() error {
+func slowRemoteCall() error {
 	time.Sleep(2 * time.Second)
 	return nil
 }
 
-func veryFastRemoteCall() error {
+func fastRemoteCall() error {
 	time.Sleep(50 * time.Millisecond)
 	return nil
+}
+
+func fastAndBrokenRemoteCall() error {
+	time.Sleep(20 * time.Millisecond)
+	return errors.New("fast, but broken")
 }
 
 func cancelable(ctx context.Context, f func() error) error {
@@ -31,8 +36,8 @@ func cancelable(ctx context.Context, f func() error) error {
 		case <-ctx.Done():
 			return errors.New("function too slow")
 
-		case <-ch:
-			return nil
+		case err := <-ch:
+			return err
 		}
 	}
 }
@@ -40,10 +45,13 @@ func cancelable(ctx context.Context, f func() error) error {
 func main() {
 	ctx := context.Background()
 	start := time.Now()
-	slow := cancelable(ctx, verySlowRemoteCall)
-	fast := cancelable(ctx, veryFastRemoteCall)
 
-	fmt.Println("time spent: ", time.Since(start))
-	fmt.Println("very slow func: ", slow)
-	fmt.Println("very fast func: ", fast)
+	slow := cancelable(ctx, slowRemoteCall)
+	fast := cancelable(ctx, fastRemoteCall)
+	broken := cancelable(ctx, fastAndBrokenRemoteCall)
+
+	fmt.Println("total time spent: ", time.Since(start))
+	fmt.Println("slow func: ", slow)
+	fmt.Println("fast func: ", fast)
+	fmt.Println("broken func: ", broken)
 }
