@@ -22,15 +22,20 @@ func fastAndBrokenRemoteCall() error {
 	return errors.New("fast, but broken")
 }
 
+// cancelable act as circuit breaker for the function f, that is, it will wait for the function to finish, but if it takes too long, it will return an error.
 func cancelable(ctx context.Context, f func() error) error {
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
 	defer cancel()
 
 	ch := make(chan error)
 	go func() {
+		// ATTENTION: once the function begins executing, it will not be interrupted, even if the context is canceled.
+		// It is ok for short-lived functions such as HTTP calls, but not for long-running ones, specially it it demands some resource releasing or shutdown gracefully.
+		// Furthermore, in a real scenario, the f function receive a context as parameter in order to be able handle cancellation properly if necessary.
 		ch <- f()
 	}()
 
+	// select will wait for the first channel to return a value, either the function result or the context.Done signal.
 	select {
 	case <-ctx.Done():
 		return errors.New("function too slow")
