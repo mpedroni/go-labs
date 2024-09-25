@@ -2,6 +2,8 @@
 
 Esse é um exemplo de como cancelar a execução de goroutines utilizando o pacote [context](https://pkg.go.dev/context) da lib padrão do Go. A ideia é que, ao cancelar o context, todas as goroutines relacionadas a ele sejam canceladas, bem como os contexts criados a partir desse mesmo context.
 
+Além deste README, você pode conferir o código fonte em [main.go](main.go) para mais detalhes e exemplos de uso.
+
 ## Criando um context cancelável
 
 Podemos fazer isso de várias formas, dependendo de como o context deve ser cancelado. O método `context.WithCancel` retorna um novo context e uma função `cancel` que pode ser chamada para cancelar o context. O método `context.WithDeadline` retorna um novo context que será cancelado após o tempo limite especificado. O método `context.WithTimeout` retorna um novo context que será cancelado uma vez decorrido o tempo definido.
