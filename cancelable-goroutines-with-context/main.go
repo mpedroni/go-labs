@@ -33,6 +33,7 @@ func cancelable(ctx context.Context, f func() error) error {
 		// It is ok for short-lived functions such as HTTP calls, but not for long-running ones, specially it it demands some resource releasing or shutdown gracefully.
 		// Furthermore, in a real scenario, the f function receive a context as parameter in order to be able handle cancellation properly if necessary.
 		ch <- f()
+		close(ch)
 	}()
 
 	// select will wait for the first channel to return a value, either the function result or the context.Done signal.
