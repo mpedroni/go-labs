@@ -39,7 +39,7 @@ func cancelable(ctx context.Context, f func() error) error {
 	// select will wait for the first channel to return a value, either the function result or the context.Done signal.
 	select {
 	case <-ctx.Done():
-		return errors.New("function too slow")
+		return ctx.Err()
 
 	case err := <-ch:
 		return err
