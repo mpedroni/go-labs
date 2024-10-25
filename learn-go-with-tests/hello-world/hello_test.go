@@ -8,7 +8,7 @@ func TestHello(t *testing.T) {
 		want := "Hello, Bruce"
 
 		if got != want {
-			t.Errorf("got %q want %q", got, want)
+			assert(t, got, want)
 		}
 	})
 
@@ -17,7 +17,16 @@ func TestHello(t *testing.T) {
 		want := "Hello, World"
 
 		if got != want {
-			t.Errorf("got %q want %q", got, want)
+			assert(t, got, want)
 		}
 	})
+}
+
+func assert(t testing.TB, got, want string) {
+	// it tells the test suite to print the func caller line number rather than the line number inside this func if some test fails
+	t.Helper()
+	if got != want {
+		// %q print the string double quoted
+		t.Errorf("got %q want %q", got, want)
+	}
 }
