@@ -24,6 +24,8 @@ func TestStringsRepeat(t *testing.T) {
 	}
 }
 
+// run the func N times and print results. Run with `go test -bench=.`, where .
+// N is defined by Go internally
 func BenchmarkRepeat(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Repeat("a", 5)
