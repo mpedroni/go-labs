@@ -29,6 +29,9 @@ func WithTimeout(next http.HandlerFunc) http.HandlerFunc {
 		ctx, cancel := context.WithTimeout(r.Context(), 1*time.Second)
 		defer cancel()
 
+		// let post created contexts shutdown properly
+		r = r.WithContext(ctx)
+
 		ch := make(chan struct{})
 		go func() {
 			next(w, r)
