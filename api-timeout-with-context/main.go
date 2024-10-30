@@ -8,6 +8,7 @@ import (
 )
 
 func SlowerHandler(w http.ResponseWriter, r *http.Request) {
+	// slow external api call
 	time.Sleep(2 * time.Second)
 
 	w.WriteHeader(http.StatusOK)
@@ -15,6 +16,7 @@ func SlowerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func FasterHandler(w http.ResponseWriter, r *http.Request) {
+	// faster external api call
 	time.Sleep(200 * time.Millisecond)
 
 	w.WriteHeader(http.StatusOK)
@@ -45,6 +47,7 @@ func WithTimeout(next http.HandlerFunc) http.HandlerFunc {
 func main() {
 	mux := http.NewServeMux()
 
+	// wraps the handlers with the WithTimeout middleware. It can be expanded to including as many middlewares as want
 	mux.HandleFunc("GET /slow", WithTimeout(SlowerHandler))
 	mux.HandleFunc("GET /fast", WithTimeout(FasterHandler))
 
