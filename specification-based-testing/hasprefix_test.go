@@ -30,6 +30,7 @@ partitions with a "*" won`t be tested multiple times
 - inputs relation
 	- s has prefix
 	- s hasn't prefix
+	- prefix in the middle of s *
 	- s == prefix
 
 - boundaries testing
@@ -41,22 +42,24 @@ partitions with a "*" won`t be tested multiple times
 
 ## all test cases (with * won't be tested as it is redundant; with ? i'm not sure so i will keep it)
 
+
 (s="", prefix="" -> true)
 (s="", prefix="a" -> false) *
 (s="", prefix="abc" -> false) *
 
-(s="a", prefix="" -> false) *
+(s="a", prefix="" -> true) *
 (s="a", prefix="a" -> true) *
-	(s="a", prefix="b" -> false) *
+(s="a", prefix="b" -> false) *
 (s="a", prefix="abc" -> false) (off point boundary)
 
 (s="abc", prefix="" -> true)
 (s="abc", prefix="a" -> true)
-	(s="abc", prefix="b" -> false)
+(s="abc", prefix="b" -> false)
 (s="abc", prefix="abc" -> true) (on point boundary)
-	(s="abc", prefix="bcd" -> false) ?
+(s="abc", prefix="bcd" -> false) ?
 
 (s="abc", prefix="ba" -> false) ?
+(s="abcd", prefix="bc", false) ?
 
 !! as there is no reason to assume that the program handles s and prefix with 1 or many chars, it seems to be enough testing only the "empty" and "many" partitions
 
@@ -92,6 +95,7 @@ func TestHasPrefix(t *testing.T) {
 		{"s equals prefix", "abc", "abc", true},
 		{"s and prefix not equal but same length", "abc", "bcd", false},
 		{"s has prefix but shuffled", "abc", "ba", false},
+		{"s contains prefix but in the middle", "abcd", "bc", false},
 	}
 
 	for _, c := range tt {
