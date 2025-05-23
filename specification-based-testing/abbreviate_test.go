@@ -149,6 +149,12 @@ func TestAbbreviate(t *testing.T) {
 			4, 4,
 			"", "minimum abbreviation width with offset is 5",
 		},
+		// i think it should return "..defg". Removing the weird if condition on impl line 56 leads to this return
+		"when offset is near the end, adjusts to be possible to show at least str end with marker": {
+			"abcdefg", "..",
+			4, 6,
+			"abcd..", "",
+		},
 	}
 
 	for name, tt := range tests {
