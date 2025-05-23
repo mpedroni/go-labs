@@ -4,76 +4,6 @@ import (
 	"testing"
 )
 
-func TestAbbreviate_Exploratory(t *testing.T) {
-	t.Skip()
-	tests := []struct {
-		name,
-		str, abbrevMarker string
-		offset, maxWidth int
-		want             string
-		wantErr          string
-	}{
-		{
-			"abbreviate end",
-			"abcdefghijklmno", "...", 0, 10,
-			"abcdefg...", "",
-		},
-		{
-			"abbreviate end",
-			"abcdefghijklmno", "...", 4, 10,
-			"abcdefg...", "",
-		},
-		{
-			"abbreviate middle",
-			"abcdefghijklmno", "...", 5, 10,
-			"...fghi...", "",
-		},
-		{
-			"still abbreviate middle",
-			"abcdefghijklm", "...", 5, 10,
-			"...fghi...", "",
-		},
-		{
-			"abbreviate start",
-			"abcdefghijkl", "...", 5, 10,
-			"...fghijkl", "",
-		},
-		{
-			"abbreviate start",
-			"abcdefghijklmno", "...", 10, 10,
-			"...ijklmno", "",
-		},
-		{
-			"abbreviate start",
-			"abcde", ".", 3, 3,
-			".de", "",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := Abbreviate(tt.str, tt.abbrevMarker, tt.offset, tt.maxWidth)
-			if tt.wantErr == "" && err != nil {
-				t.Errorf("unexpected error: %v", err)
-				return
-			}
-			if tt.wantErr != "" {
-				if err == nil {
-					t.Errorf("expected error %q but got nil", tt.wantErr)
-					return
-				}
-				if err.Error() != tt.wantErr {
-					t.Errorf("error = %q, wantErr = %q", err.Error(), tt.wantErr)
-				}
-				return
-			}
-			if got != tt.want {
-				t.Errorf("got = %q, want = %q", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestAbbreviate(t *testing.T) {
 	tests := map[string]struct {
 		str, abbrevMarker string
@@ -159,6 +89,76 @@ func TestAbbreviate(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
+			got, err := Abbreviate(tt.str, tt.abbrevMarker, tt.offset, tt.maxWidth)
+			if tt.wantErr == "" && err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+			if tt.wantErr != "" {
+				if err == nil {
+					t.Errorf("expected error %q but got nil", tt.wantErr)
+					return
+				}
+				if err.Error() != tt.wantErr {
+					t.Errorf("error = %q, wantErr = %q", err.Error(), tt.wantErr)
+				}
+				return
+			}
+			if got != tt.want {
+				t.Errorf("got = %q, want = %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestAbbreviate_Exploratory(t *testing.T) {
+	t.Skip()
+	tests := []struct {
+		name,
+		str, abbrevMarker string
+		offset, maxWidth int
+		want             string
+		wantErr          string
+	}{
+		{
+			"abbreviate end",
+			"abcdefghijklmno", "...", 0, 10,
+			"abcdefg...", "",
+		},
+		{
+			"abbreviate end",
+			"abcdefghijklmno", "...", 4, 10,
+			"abcdefg...", "",
+		},
+		{
+			"abbreviate middle",
+			"abcdefghijklmno", "...", 5, 10,
+			"...fghi...", "",
+		},
+		{
+			"still abbreviate middle",
+			"abcdefghijklm", "...", 5, 10,
+			"...fghi...", "",
+		},
+		{
+			"abbreviate start",
+			"abcdefghijkl", "...", 5, 10,
+			"...fghijkl", "",
+		},
+		{
+			"abbreviate start",
+			"abcdefghijklmno", "...", 10, 10,
+			"...ijklmno", "",
+		},
+		{
+			"abbreviate start",
+			"abcde", ".", 3, 3,
+			".de", "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			got, err := Abbreviate(tt.str, tt.abbrevMarker, tt.offset, tt.maxWidth)
 			if tt.wantErr == "" && err != nil {
 				t.Errorf("unexpected error: %v", err)
