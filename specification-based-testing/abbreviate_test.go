@@ -85,6 +85,24 @@ func TestAbbreviate(t *testing.T) {
 			4, 6,
 			"abcd..", "",
 		},
+
+		// 3rd iteration with AI analysis
+		"when marker is empty and offset > 0, abbreviate right side ignoring offset": {
+			"abcdefghij", "",
+			5, 4,
+			"abcd", "",
+		},
+		// good one, but same as the line 40's and the suggestion was failing (i needed to fix it)
+		"when offset near the end but not enough to fit until str end, abbreviates both sides": {
+			"abcdefghijklmnop", "...",
+			8, 10,
+			"...ijkl...", "",
+		},
+		"when maxWidth equals marker length plus one, abbreviates with minimum possible size": {
+			"abcdefghij", "+++++",
+			0, 6,
+			"a+++++", "",
+		},
 	}
 
 	for name, tt := range tests {
